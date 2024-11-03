@@ -1,0 +1,457 @@
+:root {
+    --header-height: 200px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+
+.bg {
+    background-image: url(./img/pokeballwallpaper.jpg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    filter: opacity(0.7);
+
+    width: 100vw;
+    height: 100vh;
+
+    position: fixed;
+    z-index: 0;
+}
+
+body {
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.wrapper {
+    display: flex;
+    position: relative;
+    z-index: 1;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+}
+
+header {
+    height: var(--header-height);
+    width: 100vw;
+    background-image: linear-gradient(to right, #ffffff00, #ff0000, #ffffff00);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    z-index: 99;
+    box-shadow: 4px 4px 10px 4px rgba(0, 0, 0, 0.3);
+}
+
+header span {
+    font-weight: 700;
+    color: #ffffff;
+    font-size: 12px;
+    margin-top: -20px;
+}
+
+input[type="text"] {
+    background-color: #ffffffc4;
+}
+
+input[type="text"]:focus {
+    outline: none;
+    border: none;
+    background-color: #ffffffe0;
+}
+
+.logo {
+    height: 60%;
+}
+
+.search-container {
+    margin: 20px 0 0 0;
+    width: 90%;
+    display: inline-flex;
+    max-width: 300px;
+}
+
+#pokemonSearch {
+    width: 100%;
+    padding: 5px;
+    font-size: 16px;
+    border: 1px solid #00000067;
+    border-radius: 5px;
+}
+
+#pokemonSearch:focus {
+    border: 1px solid #ffffffa4;
+}
+
+.pokemonCards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+    padding: calc(25px + var(--header-height)) 50px 0 50px;
+    max-height: calc(100vh - var(--header-height));
+    width: calc(100% - 100px);
+}
+
+.pokemon-card {
+    cursor: pointer;
+    width: 150px;
+    height: 200px;
+    background-color: rgba(255, 255, 255, 0.7);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 20px;
+    border: 1px solid rgba(0, 0, 0, 0.4);
+    box-shadow: 4px 0px 10px 4px rgba(0, 0, 0, 0.3);
+    transition: 0.125s ease-in-out;
+}
+
+.pokemonCards .pokemon-card:hover {
+    background-color: #ffffff;
+    scale: 1.1;
+}
+
+.card_img {
+    height: 65%;
+    max-width: 95%;
+    margin-top: -10%;
+}
+
+.card_span_div {
+    word-break: break-word;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    font-size: 24px;
+    font-weight: 700;
+    height: 20%;
+    border-radius: 20px;
+    background-color: #ffffff6e;
+}
+
+.card_number {
+    font-size: 10px;
+    width: 25%;
+    text-align: center;
+}
+
+.card_name {
+    font-size: 14px;
+    flex: 1;
+}
+
+.card_type_div {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    height: 15%;
+    border-radius: 20px;
+    margin-top: 8px;
+}
+
+.card_type {
+    font-size: 10px;
+    font-weight: 700;
+    color: #000000;
+    padding: 2px 4px;
+    background-color: #ffffff8f;
+    border: 1px solid rgba(0, 0, 0, 0.24);
+    border-radius: 12px;
+    margin: 15px 10px;
+}
+
+
+
+
+.no-results {
+    text-align: center;
+    padding: 20px;
+    font-size: 18px;
+    color: #666;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    margin: 10px auto;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.no-results .card_name {
+    font-size: 20px;
+    color: black;
+}
+
+
+.card_description {
+    font-size: 18px;
+}
+
+
+
+
+#overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    gap: 20px;
+}
+
+.card-detail {
+    border: 5px solid black;
+    background-color: #ffffffad;
+    padding: 20px;
+    border-radius: 25px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 500px;
+    z-index: 101;
+    height: 750px;
+    max-height: 92dvh;
+}
+
+.pokemonDetailCard {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    gap: 20px;
+    border: 3px solid rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+.close {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 100%;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    position: relative;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 1);
+    border: 2px solid black;
+}
+
+.close:hover {
+    scale:1.1;
+
+}
+
+.openCard_span_div {
+    width: calc(100% - 20px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+    font-size: 26px;
+    font-weight: 600;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 10px;
+    line-height: 100%;
+    padding: 10px 10px;
+    height: 5%;
+}
+
+.openCard_details {
+    flex: 1;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.detail_img {
+    height: 55%;
+    margin: auto;
+    position: relative;
+    max-width: 95%;
+    margin-bottom: 10px;
+}
+
+.detail_content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+    max-height:calc( 45% - 20px);
+}
+
+.detail_content nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 32px;
+}
+
+.detail_content nav p {
+    background-color: white;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 15px;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    text-align: center;
+    line-height: 100%;
+}
+
+.detail_content nav p:hover {
+    background-color: rgba(255, 255, 255, 1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.detail_content nav .active {
+    background-color: rgba(255, 255, 255, 0.9);
+
+}
+
+
+.nav_result {
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: auto;
+}   
+
+.nav_row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    width: 100%
+}
+
+.nav_row h2, .nav_row p, .nav_row span{
+    font-size: 16px;
+}
+
+.nav_row h2 {
+    width: 100px;
+}
+
+.nav_types {
+    display: flex;
+    gap: 5px;
+}
+
+.moves-div h2{
+    font-size: 16px;
+    font-family: 600;
+    margin-bottom: 10px;
+}
+.moves {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+}
+
+.move {
+    line-height: 100%;
+    padding: 3px 7px;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 5px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.arrow {
+    width: 50px;
+}
+
+.pokemon_evolution_div {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.pokemon_evolution_image {
+    width: 100px;
+}
+
+#myChart {
+    max-height: 100%;
+    max-width: 95%;
+}
+
+.chart_div {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+@media (max-width:500px) {
+    .card-detail{
+        width: 95%;
+    }
+
+    .detail_img {
+        width: 95%;
+    }
+
+    .detail_content nav {
+        gap: 10px;
+    }
+
+    .detail_content nav p {
+        border-radius: 10px;
+        padding: 3px 5px;
+        font-size: 12px;
+    }
+    .arrow {
+        width: 10px;
+        height: 30px;
+    }
+
+    .pokemon_evolution_image {
+        width: 50px;
+    }
+
+    .pokemon-card {
+        height: 180px;
+        width: 120px;
+    }
+
+    .pokemonCards {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 30px;
+        padding: calc(25px + var(--header-height)) 20px 0 20px;
+        max-height: calc(100vh - var(--header-height));
+        width: calc(100% - 40px);
+    }
+
+}
