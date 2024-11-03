@@ -49,7 +49,8 @@ Die App verwendet die [PokeAPI](https://pokeapi.co/) für den Abruf von Pokémon
 
 ## Vorschau
 
-*![pokedex](https://github.com/user-attachments/assets/cf18e82c-03f1-4a1d-90b9-18ef259430e9)*
+*![2_smaller](https://github.com/user-attachments/assets/a3c3420a-99a6-4144-be45-3476d619980f)
+*
 
 ## Mitwirken
 
