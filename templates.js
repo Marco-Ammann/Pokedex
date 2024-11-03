@@ -1,176 +1,203 @@
-/**
- * Generates the HTML for a single Pokémon card.
- * @param {Object} pokemon - The Pokémon data object containing all necessary information to render the card.
- * @returns {string} The HTML string for the Pokémon card.
- */
-function generatePokemonCardHTML(pokemon) {
-   const cardHTML = /*html*/ `
-      <div
-         class="pokemon-card"
-         id="card-${pokemon.details.id}"
-         data-pokemon-id="${pokemon.details.id}"
-         onclick="openCardDetail('${pokemon.details.id}')"
-      >
-         <div class="card_type_div">
-            <div class="card_type">
-               ${pokemon.details.types.map((type) => type.type.name.toUpperCase()).join(', ')}
-            </div>
-         </div>
-         <img
-            class="card_img"
-            src="${
-               pokemon.details.sprites.other.dream_world.front_default ||
-               pokemon.details.sprites.other.home.front_default
-            }"
-            alt="${pokemon.name}"
-         />
-         <div class="card_span_div">
-            <div class="card_number">#${pokemon.details.id}</div>
-            <div class="card_name">${pokemon.name.toUpperCase()}</div>
-         </div>
+import { state } from './state.js';
+import { getPokemonImage } from './utils.js';
+import { fetchDataFromAPI } from './utils.js';
+
+
+export function generatePokemonCardHTML(pokemon) {
+   return `
+    <div
+      class="pokemon-card"
+      id="card-${pokemon.details.id}"
+      data-pokemon-id="${pokemon.details.id}"
+    >
+      <div class="pokemon-card__type">
+        ${pokemon.details.types.map((type) => type.type.name.toUpperCase()).join(', ')}
       </div>
-   `;
-   return cardHTML;
+      <img
+        class="pokemon-card__img"
+        src="${getPokemonImage(pokemon)}"
+        alt="${pokemon.details.name} sprite"
+        loading="lazy"
+      />
+      <div class="pokemon-card__info">
+        <div class="pokemon-card__number">#${pokemon.details.id}</div>
+        <div class="pokemon-card__name">${pokemon.details.name.toUpperCase()}</div>
+      </div>
+    </div>
+  `;
 }
 
-/**
- * Generates the HTML for a single Pokémon card.
- * @param {Object} pokemon - The Pokémon data object containing all necessary information to render the card.
- * @returns {string} The HTML string for the Pokémon card.
- */
-function generateOpenedPokemonCardHTML(pokemon) {
+
+export function generateOpenedPokemonCardHTML(pokemon) {
    const aboutContent = generateAboutContent(pokemon.details.id.toString());
 
-   const openCardHTML = /*html*/ `
-       <div class="pokemonDetailCard" id="pokemonDetailCard" data-pokemon-id="${
-          pokemon.details.id
-       }">
-           <div class="openCard_span_div">
-               <div class="openCard_number">#${pokemon.details.id}</div>
-               <div class="openCard_name">${pokemon.name.toUpperCase()}</div>
-           <div onclick="closeCardDetail()" class="close">X</div>
-            </div>
-       
-           <div class="openCard_details">
-               <img
-                   class="detail_img"
-                   src="${
-                      pokemon.details.sprites.other.dream_world.front_default ||
-                      pokemon.details.sprites.other.home.front_default
-                   }"
-                   alt="${pokemon.name}"
-               />
+   return `
+    <div class="pokemonDetailCard" id="pokemonDetailCard" data-pokemon-id="${pokemon.details.id}">
+      <div class="openCard_span_div">
+        <div class="openCard_number">#${pokemon.details.id}</div>
+        <div class="openCard_name">${pokemon.details.name.toUpperCase()}</div>
+        <div id="closeButton" class="close">X</div>
+      </div>
 
-               <div class="detail_content">
-                   <nav>
-                       <p class="active" onclick="changeContent('About', '${
-                          pokemon.details.id
-                       }')">About</p>
-                       <p onclick="changeContent('Base Stats', '${
-                          pokemon.details.id
-                       }')">Base Stats</p>
-                       <p onclick="changeContent('Moves', '${pokemon.details.id}')">Moves</p>
-                       <p onclick="changeContent('Evolution', '${
-                          pokemon.details.id
-                       }')">Evolution</p>
-                   </nav>
+      <div class="openCard_details">
+        <img
+          class="detail_img"
+          src="${getPokemonImage(pokemon)}"
+          loading="lazy"
+          alt="${pokemon.details.name} sprite"
+        />
 
-                   <div class="nav_result">
-                       ${aboutContent}
-                   </div>
-               </div>
-           </div>
-       </div>
-   `;
-   return openCardHTML;
+        <div class="detail_content">
+          <nav>
+            <p class="active" data-content-type="About">About</p>
+            <p data-content-type="Base Stats">Base Stats</p>
+            <p data-content-type="Moves">Moves</p>
+            <p data-content-type="Evolution">Evolution</p>
+          </nav>
+
+          <div class="nav_result">
+            ${aboutContent}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
 }
 
-function generateAboutContent(pokemonId) {
-   const pokemon = pokemons.find((p) => p.details.id.toString() === pokemonId);
-   if (!pokemon) return '<div>Pokémon not found.</div>'; // Falls das Pokémon nicht gefunden wird
 
-   const types = pokemon.details.types.map((type) => type.type.name).join(', ');
-   const abilities = pokemon.details.abilities.map((ability) => ability.ability.name).join(', ');
+export function generateAboutContent(pokemonId) {
+   const pokemon = state.pokemons.find((p) => p.details.id === Number(pokemonId));
+   if (!pokemon) return '<div>Pokémon nicht gefunden.</div>';
+
+   const types = pokemon.details.types
+      ? pokemon.details.types.map((type) => type.type.name).join(', ')
+      : 'Unbekannt';
+   const abilities = pokemon.details.abilities
+      ? pokemon.details.abilities.map((ability) => ability.ability.name).join(', ')
+      : 'Unbekannt';
 
    return `
-       <div class="nav_row">
-           <h2>Types:</h2>
-           <div>${types}</div>
-       </div>
-       <div class="nav_row">
-           <h2>Species:</h2>
-           <span>${pokemon.speciesDetails.genera[7].genus}</span>
-       </div>
-       <div class="nav_row">
-           <h2>Height:</h2>
-           <span>${pokemon.details.height / 10} m</span>
-       </div>
-       <div class="nav_row">
-           <h2>Weight:</h2>
-           <span>${pokemon.details.weight / 10} kg</span>
-       </div>
-       <div class="nav_row">
-           <h2>Abilities:</h2>
-           <span>${abilities}</span>
-       </div>
-   `;
+    <div class="nav_row">
+      <h2>Typen:</h2>
+      <div>${types}</div>
+    </div>
+    <div class="nav_row">
+      <h2>Art:</h2>
+      <span>${pokemon.speciesDetails.genera[7]?.genus || 'Unbekannt'}</span>
+    </div>
+    <div class="nav_row">
+      <h2>Größe:</h2>
+      <span>${pokemon.details.height / 10} m</span>
+    </div>
+    <div class="nav_row">
+      <h2>Gewicht:</h2>
+      <span>${pokemon.details.weight / 10} kg</span>
+    </div>
+    <div class="nav_row">
+      <h2>Fähigkeiten:</h2>
+      <span>${abilities}</span>
+    </div>
+  `;
 }
 
 
-function generateMovesContent(pokemonId) {
-   const pokemon = pokemons.find((p) => p.details.id.toString() === pokemonId);
+export function generateMovesContent(pokemonId) {
+   const pokemon = state.pokemons.find((p) => p.details.id === Number(pokemonId));
    if (!pokemon || !pokemon.details.moves) {
-      return '<div>No moves available for this Pokémon.</div>';
+      return '<div>Keine Moves für dieses Pokémon verfügbar.</div>';
    }
 
    const movesHtml = pokemon.details.moves
       .map((moveEntry) => `<p class="move">- ${moveEntry.move.name}</p>`)
       .join('');
-   return /*html*/ `
-       <div class="moves-div">
-           <h2>Moves:</h2>
-           <div class="moves">${movesHtml}</div>
-       </div>
-   `;
+   return `
+    <div class="moves-div">
+      <h2>Moves:</h2>
+      <div class="moves">${movesHtml}</div>
+    </div>
+  `;
 }
 
-async function generateEvolutionContent(pokemonId) {
-   const pokemon = pokemons.find((p) => p.details.id.toString() === pokemonId);
+
+async function traverseEvolutionChain(chainNode) {
+   if (!chainNode) return;
+
+   await fetchAndStorePokemonIfMissing(chainNode.species.url);
+
+   for (const nextChainNode of chainNode.evolves_to) {
+      await traverseEvolutionChain(nextChainNode);
+   }
+}
+
+
+export async function generateEvolutionContent(pokemonId) {
+   const pokemon = state.pokemons.find((p) => p.details.id === Number(pokemonId));
    if (!pokemon || !pokemon.evolutionChain) {
-      return '<div>No evolution data available.</div>';
+      return '<div>Keine Evolutionsdaten verfügbar.</div>';
    }
 
-   let chain = pokemon.evolutionChain.chain;
-   while (chain) {
-      await fetchAndStorePokemonIfMissing(chain.species.url);
-
-      chain = chain.evolves_to.length > 0 ? chain.evolves_to[0] : null;
-   }
-
-   return renderEvolutionChain(pokemon.evolutionChain.chain);
+   const chain = pokemon.evolutionChain.chain;
+   await traverseEvolutionChain(chain);
+   return renderEvolutionChain(chain);
 }
+
 
 function renderEvolutionChain(chain) {
    let htmlContent = '<div class="pokemon_evolution_div">';
-   while (chain) {
-      const speciesName = chain.species.name;
-      const speciesPokemon = pokemon_evolution.find((p) => p.name === speciesName);
-      const imageUrl = speciesPokemon
-         ? speciesPokemon.details.sprites.other.dream_world.front_default ||
-           speciesPokemon.details.sprites.other.home.front_default
-         : 'path/to/default/image.jpg';
-
-      htmlContent += `<img class="pokemon_evolution_image" src="${imageUrl}" alt="${speciesName}">`;
-      if (chain.evolves_to.length > 0) {
-         htmlContent += '<img class="arrow" src="img/long-arrow-right-icon.svg" alt="">';
-         chain = chain.evolves_to[0];
-      } else {
-         break;
-      }
-   }
+   htmlContent += getEvolutionHTML(chain);
    htmlContent += '</div>';
    return htmlContent;
 }
 
 
+function getEvolutionHTML(chainNode) {
+   if (!chainNode) return '';
 
+   const speciesName = chainNode.species.name;
+   const speciesId = chainNode.species.url.split('/').filter(Boolean).pop();
+   const pokemon = findPokemonById(speciesId);
+   const imageUrl = pokemon ? getPokemonImage(pokemon) : 'img/pokedex2.png';
+
+   let html = `
+    <div class="evolution-stage">
+      <img class="pokemon_evolution_image" loading="lazy" src="${imageUrl}" alt="${speciesName}">
+      <p>${speciesName}</p>
+    </div>
+  `;
+
+   if (chainNode.evolves_to.length > 0) {
+      html += '<img class="arrow" loading="lazy" src="img/long-arrow-right-icon.svg" alt="">';
+      chainNode.evolves_to.forEach((nextChainNode) => {
+         html += getEvolutionHTML(nextChainNode);
+      });
+   }
+
+   return html;
+}
+
+
+function findPokemonById(pokemonId) {
+   return (
+      state.pokemons.find((p) => p.details.id === Number(pokemonId)) ||
+      state.pokemon_evolution.find((p) => p.details.id === Number(pokemonId))
+   );
+}
+
+
+async function fetchAndStorePokemonIfMissing(speciesUrl) {
+   const speciesData = await fetchDataFromAPI(speciesUrl);
+   if (speciesData) {
+      const pokemonId = speciesData.id;
+      if (!state.pokemons.some((p) => p.details.id === pokemonId)) {
+         const pokemonData = await fetchDataFromAPI(
+            `https://pokeapi.co/api/v2/pokemon/${pokemonId}/`
+         );
+         if (pokemonData) {
+            state.pokemon_evolution.push({
+               details: pokemonData,
+               speciesDetails: speciesData,
+            });
+         }
+      }
+   }
+}

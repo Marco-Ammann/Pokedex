@@ -1,49 +1,100 @@
-const BASE_URL = 'https://pokeapi.co/api/v2/';
-let pokemons = [];
-let pokemon_evolution = [];
-let currentOffset = 0;
-let isLoading = false;
-let isBottomReached = false;
+import { state } from './state.js';
+import { loadPokemon } from './data-fetching.js';
+import { renderCards } from './render.js';
+import { setupScrollListener } from './scroll.js';
+import { filterPokemons } from './search.js';
+import { loadMorePokemon } from './scroll.js';
+import { POKEMON_LOAD_LIMIT } from './config.js';
+import { openCardDetail, closeCardDetail } from './navigation.js';
 
-/**
- * Initialises the page, loads the first 50 pokemon and sets up a scroll-listener
- */
-async function init() {
-   setupScrollListener();
-   await loadPokemon(50, 0);
-   currentOffset = 50;
-   renderCards();
+
+export function setLoadingState(isLoading) {
+   const loadingSpinner = document.getElementById('loading');
+   loadingSpinner.style.display = isLoading ? 'flex' : 'none';
 }
 
-/**
- * Sets up a scroll listener, to watch the scrollbar to reach the end
- */
-function setupScrollListener() {
-   window.addEventListener('scroll', () => {
-      const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
-      if (scrollTop + clientHeight >= scrollHeight - 50) {
-         isBottomReached = true;
+
+export function showError(message) {
+   const errorDiv = document.getElementById('error-message');
+   errorDiv.textContent = message;
+   errorDiv.style.display = 'block';
+}
+
+
+export function hideError() {
+   document.getElementById('error-message').style.display = 'none';
+}
+
+
+function setupEventListeners() {
+   document.getElementById('pokemonSearch').addEventListener('input', filterPokemons);
+
+   document.querySelector('.loadmore').addEventListener('click', async () => {
+      const loadMoreButton = document.querySelector('.loadmore');
+      loadMoreButton.disabled = true;
+      setLoadingState(true);
+
+      const newDataLoaded = await loadMorePokemon();
+
+      if (newDataLoaded) {
+         renderCards();
+         state.currentOffset += POKEMON_LOAD_LIMIT;
+      } else {
+         console.log('Keine weiteren Pokémon zum Laden.');
       }
-      loadMorePokemon();
+
+      setLoadingState(false);
+      loadMoreButton.disabled = false;
+   });
+
+   document.getElementById('pokemonCards').addEventListener('click', (event) => {
+      const card = event.target.closest('.pokemon-card');
+      if (card) {
+         openCardDetail(card.getAttribute('data-pokemon-id'));
+      }
+   });
+
+   document.getElementById('overlay').addEventListener('click', (event) => {
+      if (event.target === event.currentTarget) {
+         closeCardDetail();
+      }
    });
 }
 
-/**
- * Renders cards for all Pokémon and adds them to the DOM. This function first
- * generates HTML for each Pokémon card and then applies the appropriate background
- * colors based on the Pokémon's types.
- */
-async function renderCards() {
-   let cardContainer = document.getElementById('pokemonCards');
-   let cardsHTML = '';
 
-   pokemons.forEach((pokemon) => {
-      cardsHTML += generatePokemonCardHTML(pokemon);
-   });
+async function init() {
+   setupEventListeners();
+   setupScrollListener();
 
-   cardContainer.innerHTML = cardsHTML;
+   await loadAndRenderInitialPokemons();
 
-   pokemons.forEach((pokemon) => {
-      setBackgroundcolorFromType(pokemon);
-   });
+   preloadNextPokemons();
 }
+
+
+async function loadAndRenderInitialPokemons() {
+   const batchSize = 5;
+   const totalInitialPokemons = 50;
+   const totalBatches = totalInitialPokemons / batchSize;
+
+   for (let i = 0; i < totalBatches; i++) {
+      const offset = i * batchSize;
+      const newDataLoaded = await loadPokemon(batchSize, offset);
+      if (newDataLoaded) {
+         renderCards();
+         state.currentOffset += batchSize;
+      } else {
+         console.log('Keine Pokémon zum Laden.');
+         break;
+      }
+   }
+}
+
+
+function preloadNextPokemons() {
+   const nextOffset = state.currentOffset;
+   loadPokemon(POKEMON_LOAD_LIMIT, nextOffset);
+}
+
+
+init();

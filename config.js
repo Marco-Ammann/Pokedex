@@ -1,0 +1,1 @@
+export const POKEMON_LOAD_LIMIT = 20;

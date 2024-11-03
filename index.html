@@ -1,87 +1,53 @@
 <!DOCTYPE html>
-<html lang="en">
-   <head>
-      <meta charset="UTF-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <link rel="preconnect" href="https://fonts.googleapis.com" />
-      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-      <link
-         href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap"
-         rel="stylesheet"
-      />
-      <title>Pokedex</title>
-      <link rel="stylesheet" href="style.css" />
-      <link rel="stylesheet" href="navigate.css" />
-      <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+<html lang="de">
 
-      <script src="navigation.js"></script>
-      <script src="search.js"></script>
-      <script src="colors.js"></script>
-      <script src="data-fetching.js"></script>
-      <script src="templates.js"></script>
-      <script src="base_stats.js"></script>
-      <script src="script.js"></script>
-      <link rel="shortcut icon" href="img/pokeball-96.png" type="image/x-icon" />
-   </head>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pokedex</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="navigate.css" />
+  <link rel="shortcut icon" href="img/pokeball-96.png" type="image/x-icon" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+  <script src="script.js" type="module"></script>
+</head>
 
-   <body onload="init()">
-      <div class="bg"></div>
-      <main class="wrapper">
-         <header>
-            <img class="logo" src="img/pokemon-23.svg" alt="Logo" />
-            <span>by Marco Ammann</span>
-            <div class="search-container">
-               <input
-                  type="text"
-                  id="pokemonSearch"
-                  placeholder="search a pokemon ..."
-                  oninput="filterPokemons()"
-               />
-            </div>
-         </header>
-         <section class="pokemonCards" id="pokemonCards">
-            <div class="pokemon-card"></div>
-            <div class="pokemon-card"></div>
-            <div class="pokemon-card"></div>
-            <div class="pokemon-card"></div>
-            <div class="pokemon-card"></div>
-            <div class="pokemon-card"></div>
-            <div class="pokemon-card"></div>
-            <div class="pokemon-card"></div>
-            <div class="pokemon-card"></div>
-            <div class="pokemon-card"></div>
-            <div class="pokemon-card"></div>
-            <div class="pokemon-card"></div>
-            <div class="pokemon-card"></div>
-            <div class="pokemon-card"></div>
-            <div class="pokemon-card"></div>
-            <div class="pokemon-card"></div>
-            <div class="pokemon-card"></div>
-            <div class="pokemon-card"></div>
-            <div class="pokemon-card"></div>
-            <div class="pokemon-card"></div>
-            <div class="pokemon-card"></div>
-            <div class="pokemon-card"></div>
-            <div class="pokemon-card"></div>
-            <div class="pokemon-card"></div>
-            <div class="pokemon-card"></div>
-            <div class="pokemon-card"></div>
-            <div class="pokemon-card"></div>
-            <div class="pokemon-card"></div>
-            <div class="pokemon-card"></div>
-            <div class="pokemon-card"></div>
-         </section>
-         <div class="no-results" style="display: none">
-            <div class="card_name">No Pokémon Found</div>
-            <div class="card_description">Try to load more or adjust your search criteria.</div>
-         </div>
-      </main>
-      <div id="overlay" style="display: none">
-         <button onclick="navigatePokemon('prev')">← Prev</button>
-         <div id="card-detail" class="card-detail"></div>
+<body>
+  <div id="loading" class="loading-spinner"></div>
+  <div id="error-message" style="display: none; color: red;"></div>
 
-         <button onclick="navigatePokemon('next')">Next →</button>
+  <div class="bg"></div>
+  <main class="wrapper">
+    <header>
+      <img class="logo" src="img/pokemon-23.svg" alt="Logo" />
+      <span>by Marco Ammann</span>
+      <div class="search-container">
+        <input type="text" id="pokemonSearch" placeholder="Suche ein Pokémon ..." />
       </div>
-      <script src="open-card.js"></script>
-   </body>
+    </header>
+    <section class="pokemonCards" id="pokemonCards"></section>
+    <button class="loadmore" aria-label="Mehr Pokémon laden">
+      <div class="pokeball-button">
+        <div class="pokeball-top"></div>
+        <div class="pokeball-middle">
+          <div class="pokeball-button-inner"></div>
+        </div>
+        <div class="pokeball-bottom"></div>
+      </div>
+    </button>
+    <div class="no-results" style="display: none">
+      <div class="card_name">Kein Pokémon gefunden</div>
+      <div class="card_description">
+        Versuche mehr zu laden oder passe deine Suchkriterien an.
+      </div>
+    </div>
+  </main>
+  <!-- Overlay für das detaillierte Pokémon -->
+  <div id="overlay" style="display: none">
+    <button id="prevButton">← Prev</button>
+    <div id="card-detail" class="card-detail"></div>
+    <button id="nextButton">Next →</button>
+  </div>
+</body>
+
 </html>

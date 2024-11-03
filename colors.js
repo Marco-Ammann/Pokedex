@@ -1,4 +1,4 @@
-const typeColors = {
+export const typeColors = {
    grass: '#16C172',
    fire: '#EF271B',
    water: '#4361EE',
@@ -20,24 +20,23 @@ const typeColors = {
 };
 
 
-/**
- * Sets the background color for a Pokémon card based on its type(s).
- * @param {Object} pokemon - The Pokémon data object with details about its types.
- */
-function setBackgroundcolorFromType(pokemon) {
-   const pokemonCard = document.getElementById(`card-${pokemon.details.id}`);
+export function setBackgroundcolorFromType(pokemon, element) {
    const backgroundColor = getCardBackgroundColor(
       pokemon.details.types.map((type) => type.type.name.toLowerCase())
    );
-   pokemonCard.style.background = backgroundColor;
+   element.style.background = backgroundColor;
 }
 
 
-/**
- * Determines the appropriate background color or gradient based on the Pokémon's types.
- * @param {Array<string>} types - An array of Pokémon type names.
- * @returns {string} The CSS background property value for the types.
- */
+export function setBackgroundcolorFromTypeforOverlay(pokemon) {
+   const cardDetail = document.getElementById(`card-detail`);
+   const backgroundColor = getCardBackgroundColor(
+      pokemon.details.types.map((type) => type.type.name.toLowerCase())
+   );
+   cardDetail.style.background = backgroundColor;
+}
+
+
 function getCardBackgroundColor(types) {
    if (types.length === 1) {
       return typeColors[types[0]] || 'white';
@@ -48,17 +47,4 @@ function getCardBackgroundColor(types) {
    } else {
       return 'white';
    }
-}
-
-
-/**
- * Sets the background color for a Pokémon card based on its type(s).
- * @param {Object} pokemon - The Pokémon data object with details about its types.
- */
-function setBackgroundcolorFromTypeforOverlay(pokemon) {
-   const cardDetail = document.getElementById(`card-detail`);
-   const backgroundColor = getCardBackgroundColor(
-      pokemon.details.types.map((type) => type.type.name.toLowerCase())
-   );
-   cardDetail.style.background = backgroundColor;
 }
