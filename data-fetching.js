@@ -4,7 +4,12 @@ import { setLoadingState, showError } from './script.js';
 
 const BASE_URL = 'https://pokeapi.co/api/v2/';
 
-
+/**
+ * Loads a set of Pokémon data and processes it.
+ * @param {number} limit - Number of Pokémon to fetch.
+ * @param {number} offset - Offset for the API request.
+ * @returns {Promise<boolean>} - Returns true if data is successfully loaded.
+ */
 export async function loadPokemon(limit, offset) {
    try {
       setLoadingState(true);
@@ -25,7 +30,12 @@ export async function loadPokemon(limit, offset) {
    }
 }
 
-
+/**
+ * Fetches Pokémon data from API or local storage.
+ * @param {number} limit - Number of Pokémon to fetch.
+ * @param {number} offset - Offset for the API request.
+ * @returns {Promise<Object|null>} - The fetched data or null if not found.
+ */
 async function fetchPokemonData(limit, offset) {
    const cachedData = localStorage.getItem(`pokemons_${offset}`);
    if (cachedData) {
@@ -40,13 +50,19 @@ async function fetchPokemonData(limit, offset) {
    return null;
 }
 
-
+/**
+ * Processes and stores Pokémon data.
+ * @param {Object} data - The Pokémon data to process.
+ */
 async function processPokemonData(data) {
    await Promise.all(data.results.map((pokemon) => loadPokemonDetails(pokemon.url)));
    state.pokemons.sort((a, b) => a.details.id - b.details.id);
 }
 
-
+/**
+ * Loads detailed Pokémon data from a URL.
+ * @param {string} url - API URL for Pokémon details.
+ */
 export async function loadPokemonDetails(url) {
    try {
       const data = await fetchDataFromAPI(url);
@@ -60,7 +76,11 @@ export async function loadPokemonDetails(url) {
    }
 }
 
-
+/**
+ * Loads Pokémon species data from a URL.
+ * @param {string} url - API URL for species details.
+ * @param {number} pokemonId - ID of the Pokémon.
+ */
 export async function loadPokemonSpecies(url, pokemonId) {
    try {
       const speciesData = await fetchDataFromAPI(url);
@@ -80,7 +100,11 @@ export async function loadPokemonSpecies(url, pokemonId) {
    }
 }
 
-
+/**
+ * Loads the evolution chain data for a Pokémon.
+ * @param {string} url - API URL for the evolution chain.
+ * @param {number} pokemonId - ID of the Pokémon.
+ */
 export async function loadEvolutionChain(url, pokemonId) {
    try {
       const evolutionData = await fetchDataFromAPI(url);

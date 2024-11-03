@@ -1,11 +1,18 @@
 import { state } from './state.js';
 
-
+/**
+ * Generates the base stats section content for a Pokémon.
+ * @param {number|string} pokemonId - ID of the Pokémon.
+ * @returns {string} - The generated HTML string for the base stats section.
+ */
 export function generateBaseStatsContent(pokemonId) {
    return '<div class="chart_div"><canvas id="myChart"></canvas></div>';
 }
 
-
+/**
+ * Initializes and renders a chart displaying a Pokémon's base stats.
+ * @param {number|string} pokemonId - ID of the Pokémon.
+ */
 export function initializeChart(pokemonId) {
    requestAnimationFrame(() => {
       const ctx = document.getElementById('myChart').getContext('2d');

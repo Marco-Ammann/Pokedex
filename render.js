@@ -2,6 +2,9 @@ import { state } from './state.js';
 import { generatePokemonCardHTML } from './templates.js';
 import { setBackgroundcolorFromType } from './colors.js';
 
+/**
+ * Renders Pokémon cards in the main container.
+ */
 export function renderCards() {
    const cardContainer = document.getElementById('pokemonCards');
  

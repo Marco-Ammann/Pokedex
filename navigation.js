@@ -8,7 +8,10 @@ import {
 import { initializeChart, generateBaseStatsContent } from './base_stats.js';
 import { setBackgroundcolorFromTypeforOverlay } from './colors.js';
 
-
+/**
+ * Opens and displays detailed information for a specific Pokémon.
+ * @param {number|string} pokemonId - ID of the Pokémon to display.
+ */
 export function openCardDetail(pokemonId) {
    const pokemon = state.pokemons.find((p) => p.details.id === Number(pokemonId));
    if (pokemon) {
@@ -19,7 +22,10 @@ export function openCardDetail(pokemonId) {
    }
 }
 
-
+/**
+ * Initializes the content of the overlay for a specific Pokémon.
+ * @param {Object} pokemon - The Pokémon object to display.
+ */
 function initializeOverlayContent(pokemon) {
    const cardDetail = document.getElementById('card-detail');
    cardDetail.innerHTML = generateOpenedPokemonCardHTML(pokemon);
@@ -27,7 +33,10 @@ function initializeOverlayContent(pokemon) {
    changeContent('About', pokemon.details.id);
 }
 
-
+/**
+ * Sets up event listeners for navigation buttons and tabs.
+ * @param {number|string} pokemonId - ID of the Pokémon for navigation.
+ */
 function setupEventListeners(pokemonId) {
    document.getElementById('prevButton').onclick = () => navigatePokemon('prev');
    document.getElementById('nextButton').onclick = () => navigatePokemon('next');
@@ -42,7 +51,9 @@ function setupEventListeners(pokemonId) {
    });
 }
 
-
+/**
+ * Closes the detail overlay.
+ */
 export function closeCardDetail() {
    const overlay = document.getElementById('overlay');
    overlay.style.display = 'none';
@@ -51,7 +62,11 @@ export function closeCardDetail() {
    cardDetail.innerHTML = '';
 }
 
-
+/**
+ * Changes the content displayed in the Pokémon detail overlay.
+ * @param {string} contentType - The type of content to display.
+ * @param {number|string} pokemonId - ID of the Pokémon to update content for.
+ */
 export async function changeContent(contentType, pokemonId) {
    const pokemon = state.pokemons.find((p) => p.details.id === Number(pokemonId));
    if (!pokemon) {
@@ -89,7 +104,10 @@ export async function changeContent(contentType, pokemonId) {
    }
 }
 
-
+/**
+ * Navigates to the previous or next Pokémon.
+ * @param {string} direction - 'prev' or 'next' to navigate Pokémon.
+ */
 export function navigatePokemon(direction) {
    const pokemonsArray = Array.from(state.pokemons.values());
    const currentPokemonId = Number(

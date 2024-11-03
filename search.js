@@ -1,3 +1,6 @@
+/**
+ * Filters the displayed Pokémon cards based on user input.
+ */
 export function filterPokemons() {
    const input = document.getElementById('pokemonSearch').value.toUpperCase();
    const pokemonCards = document.querySelectorAll('.pokemon-card');

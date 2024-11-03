@@ -2,7 +2,11 @@ import { state } from './state.js';
 import { getPokemonImage } from './utils.js';
 import { fetchDataFromAPI } from './utils.js';
 
-
+/**
+ * Generates the HTML for a Pokémon card.
+ * @param {Object} pokemon - The Pokémon object to display.
+ * @returns {string} - The generated HTML string.
+ */
 export function generatePokemonCardHTML(pokemon) {
    return `
     <div
@@ -27,7 +31,11 @@ export function generatePokemonCardHTML(pokemon) {
   `;
 }
 
-
+/**
+ * Generates the HTML for a detailed Pokémon card view.
+ * @param {Object} pokemon - The Pokémon object to display.
+ * @returns {string} - The generated HTML string.
+ */
 export function generateOpenedPokemonCardHTML(pokemon) {
    const aboutContent = generateAboutContent(pokemon.details.id.toString());
 
@@ -64,7 +72,11 @@ export function generateOpenedPokemonCardHTML(pokemon) {
   `;
 }
 
-
+/**
+ * Generates the 'About' section content for a Pokémon.
+ * @param {number|string} pokemonId - ID of the Pokémon.
+ * @returns {string} - The generated HTML string for the 'About' section.
+ */
 export function generateAboutContent(pokemonId) {
    const pokemon = state.pokemons.find((p) => p.details.id === Number(pokemonId));
    if (!pokemon) return '<div>Pokémon nicht gefunden.</div>';
@@ -100,7 +112,11 @@ export function generateAboutContent(pokemonId) {
   `;
 }
 
-
+/**
+ * Generates the 'Moves' section content for a Pokémon.
+ * @param {number|string} pokemonId - ID of the Pokémon.
+ * @returns {string} - The generated HTML string for the 'Moves' section.
+ */
 export function generateMovesContent(pokemonId) {
    const pokemon = state.pokemons.find((p) => p.details.id === Number(pokemonId));
    if (!pokemon || !pokemon.details.moves) {
@@ -118,7 +134,10 @@ export function generateMovesContent(pokemonId) {
   `;
 }
 
-
+/**
+ * Traverses and processes the evolution chain recursively.
+ * @param {Object} chainNode - The node in the evolution chain.
+ */
 async function traverseEvolutionChain(chainNode) {
    if (!chainNode) return;
 
@@ -129,7 +148,11 @@ async function traverseEvolutionChain(chainNode) {
    }
 }
 
-
+/**
+ * Generates the evolution section content for a Pokémon.
+ * @param {number|string} pokemonId - ID of the Pokémon.
+ * @returns {Promise<string>} - The generated HTML string for the evolution section.
+ */
 export async function generateEvolutionContent(pokemonId) {
    const pokemon = state.pokemons.find((p) => p.details.id === Number(pokemonId));
    if (!pokemon || !pokemon.evolutionChain) {
@@ -141,7 +164,11 @@ export async function generateEvolutionContent(pokemonId) {
    return renderEvolutionChain(chain);
 }
 
-
+/**
+ * Renders the HTML for an evolution chain.
+ * @param {Object} chain - The evolution chain node.
+ * @returns {string} - The generated HTML string.
+ */
 function renderEvolutionChain(chain) {
    let htmlContent = '<div class="pokemon_evolution_div">';
    htmlContent += getEvolutionHTML(chain);
@@ -149,7 +176,11 @@ function renderEvolutionChain(chain) {
    return htmlContent;
 }
 
-
+/**
+ * Generates HTML for a single evolution node.
+ * @param {Object} chainNode - The node in the evolution chain.
+ * @returns {string} - The generated HTML string for the node.
+ */
 function getEvolutionHTML(chainNode) {
    if (!chainNode) return '';
 
@@ -175,7 +206,11 @@ function getEvolutionHTML(chainNode) {
    return html;
 }
 
-
+/**
+ * Finds a Pokémon by its ID.
+ * @param {number|string} pokemonId - The ID of the Pokémon.
+ * @returns {Object|null} - The found Pokémon object or null.
+ */
 function findPokemonById(pokemonId) {
    return (
       state.pokemons.find((p) => p.details.id === Number(pokemonId)) ||
@@ -183,7 +218,10 @@ function findPokemonById(pokemonId) {
    );
 }
 
-
+/**
+ * Fetches and stores a Pokémon's data if it's not already present.
+ * @param {string} speciesUrl - The URL for fetching species data.
+ */
 async function fetchAndStorePokemonIfMissing(speciesUrl) {
    const speciesData = await fetchDataFromAPI(speciesUrl);
    if (speciesData) {

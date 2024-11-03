@@ -1,3 +1,8 @@
+/**
+ * Fetches data from a given API URL.
+ * @param {string} url - The API URL to fetch data from.
+ * @returns {Promise<Object|null>} - The response data or null on failure.
+ */
 export async function fetchDataFromAPI(url) {
   try {
     const response = await fetch(url);
@@ -9,7 +14,11 @@ export async function fetchDataFromAPI(url) {
   }
 }
 
-
+/**
+ * Retrieves the image URL of a Pokémon.
+ * @param {Object} pokemon - The Pokémon object containing sprite details.
+ * @returns {string} - The image URL or a default placeholder.
+ */
 export function getPokemonImage(pokemon) {
    if (!pokemon?.details?.sprites) {
      console.error('Ungültiges Pokémon-Objekt:', pokemon);
